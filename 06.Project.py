@@ -1,24 +1,32 @@
-InputFileName = "06.Project Input File.txt"
-MergeFileName = "06.Project Merge File.txt"
-OutputFileName = "06.Project Output File.txt"
-inputrecordcount = 0
-mergerecordcount = 0
-outputrecordcount = 0
-inputfile = open(InputFileName, "r")
-mergefile = open(MergeFileName, "r")
-outputfile = open(OutputFileName, "w")
-lines1 = inputfile.readline("Hello!", "Welcome to 06.Project Input File.txt")
-lines2 = mergefile.readline("This is line 1 of the merge file", "This is line 2 of the merge file")
-lines3 = inputfile.readline("This file is for testing purposes.", "Good luck!")
-while lines1 != '':
-    outputfile.write(lines1, lines2, lines3)
-    inputrecordcount += 1
-    mergerecordcount += 1
-    outputrecordcount += 1
-inputfile.close()
-mergefile.close()
-outputfile.close()
-print("{} input records written" .format(inputrecordcount))
-print("{} merge records written" .format(mergerecordcount))
-print("{} input records written" .format(inputrecordcount))
-
+inputfilename = '06.Project Input File.txt'
+mergefilename = '06.Project Merge File.txt'
+outputfilename = '06.Project Output File.txt'
+def recordcount(filename):
+    with open(filename, 'r') as file:
+        return sum(1 for line in file)
+def mergedfiles(inputfile, mergefile, outputfile):
+    inputrecordcount = 0
+    mergerecordcount = 0
+    outputrecordcount = 0
+    with open(outputfile, 'w') as output, \
+         open(inputfile, 'r') as input, \
+         open(mergefile, 'r') as merge:
+        for line in input:
+            output.write(line)
+            inputrecordcount += 1
+            outputrecordcount += 1
+            if '**Insert Merge File Here**' in line:
+                for mergedline in merge:
+                    output.write(mergedline)
+                    mergerecordcount += 1
+                    outputrecordcount += 1
+                merge.seek(0)
+        for line in input:
+            output.write(line)
+            inputrecordcount += 1
+            outputrecordcount += 1
+    return inputrecordcount, mergerecordcount, outputrecordcount
+inputrecordcount, mergerecordcount, outputrecordcount = mergedfiles(inputfilename, mergefilename, outputfilename)
+print("inputrecordcount Input file Records")
+print("mergerecordcount Merge File Records")
+print("outputrecordcount Output File Records")
