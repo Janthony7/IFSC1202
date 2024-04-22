@@ -64,5 +64,5 @@ def main():
     student_list.add_scores_from_file("11.Project Scores.txt")
     student_list.print_student_list()
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
