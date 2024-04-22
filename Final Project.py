@@ -11,29 +11,26 @@ class UserList:
         self.filename = filename
 
     def ReadUserFile(self):
-        try:
-            with open(self.filename, "r") as file:
-                for line in file:
-                    username, password = line.strip().split(",")
-                    self.UserList.append(User(username, password))
-        except FileNotFoundError:
-            pass
+        with open(self.filename, "r") as file:
+            for line in file:
+                username, password = line.strip().split(",")
+                self.UserList.append(User(username, password))
     
     def WriteUserFile(self):
         with open(self.filename, "w") as file:
             for user in self.UserList:
-                file.write(f"{user.UserName},{user.Password}\n")
+                file.write(f"{user.UserName}, {user.Password}\n")
 
     def DisplayUserList(self):
-        print("Username        Password       ")
+        print("Username        Password")
         print("--------------- ---------------")
         for user in self.UserList:
             print(f"{user.UserName:<15} {user.Password}")
 
     def FindUsername(self, username):
-        for i, user in enumerate(self.UserList):
+        for index, user in enumerate(self.UserList):
             if user.UserName == username:
-                return i
+                return index
         return -1
     
     def ChangePassword(self, username, password):
@@ -52,10 +49,10 @@ class UserList:
             print("Username Already Exists")
 
     def DeleteUser(self, username):
-        index = self.FindUSername(username)
+        index = self.FindUsername(username)
         if index != -1:
             del self.UserList[index]
-            print("USer Deleted")
+            print("User Deleted")
         else:
             print("Username Not Found")
 
@@ -63,13 +60,13 @@ class UserList:
         score = 0
         if len(password) >= 8:
             score += 1
-        if re.search(r"[a-z]", password):
+        if re.search("[A-Z]", password):
             score += 1
-        if re.search(r"[A-Z]", password):
+        if re.search("[a-z]", password):
             score += 1
-        if re.search(r"\d", password):
+        if re.search("[0-9]", password):
             score += 1
-        if re.search(r"[~!@#$%^&*()_+|\-={}\[\]:;<>?/]", password):
+        if re.search("[~!@#$%^&*()_+|-={}[]:;<>?/]", password):
             score += 1
         return score
     
@@ -89,20 +86,23 @@ def main():
         choice = input("Enter Selection: ")
 
         if choice == "1":
-            username = input("Enter Username: ")
-            password = input("Enter Password: ")
-            while userList.Strength(password) < 5:
-                print(f"This password is weak - {userList.Strength(password)}")
-                password = input("Enter a stronger Password: ")
-            userList.AddUser(username, password)
+            username = input("Enter User ID: ")
+            if userList.FindUsername(username) == -1:
+                password = input("Enter Password: ")
+                while userList.Strength(password) < 5:
+                    print(f"This password is weak - {userList.Strength(password)}")
+                    password = input("Enter a stronger Password: ")
+                userList.AddUser(username, password)
+            else:
+                print("Username Already Exists")
 
         elif choice == "2":
-            username = ("Enter Username: ")
+            username = input("Enter User ID to Delete: ")
             userList.DeleteUser(username)  
 
         elif choice == "3":
-            username = input("Enter Username: ")
-            if userList.FindUSername(username) != -1:
+            username = input("Enter User ID: ")
+            if userList.FindUsername(username) != -1:
                 password = input("Enter New Password: ")
                 while userList.Strength(password) < 5:
                     print(f"This password is weak - {userList.Strength(password)}")
